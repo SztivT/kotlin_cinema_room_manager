@@ -58,18 +58,52 @@ fun drawCinema(a2D: Array<CharArray>) {
 
 fun buyTicket(aCinema: Array<CharArray>, aTicket: Array<IntArray>) {
     println("Enter a row number:")
-    val nReservedRow = scanner.nextInt()
+    val nReservedRow = scanner.nextInt() - 1
     println("Enter a seat number in that row:")
-    val nReservedSeat = scanner.nextInt()
-    println("Ticket price: $${aTicket[nReservedRow - 1][nReservedSeat - 1]}")
-    aCinema[nReservedRow - 1][nReservedSeat - 1] = 'B'
+    val nReservedSeat = scanner.nextInt() - 1
+    if (nReservedRow !in aTicket.indices || nReservedSeat !in aTicket[nReservedRow].indices) {
+        println("Wrong input!")
+        buyTicket(aCinema, aTicket)
+    } else {
+        if (aCinema[nReservedRow][nReservedSeat] == 'B') {
+            println("That ticket has already been purchased!")
+            buyTicket(aCinema, aTicket)
+        } else {
+            println("Ticket price: $${aTicket[nReservedRow][nReservedSeat]}")
+            aCinema[nReservedRow][nReservedSeat] = 'B'
+        }
+    }
 
+}
+
+fun ticketPurchased(aCinema: Array<CharArray>, aTicket: Array<IntArray>) {
+    var ticketSold = 0
+    var fullHouse = 0
+    var income = 0
+    var total = 0
+    for (r in aCinema.indices) {
+        for (s in aCinema[r].indices) {
+            if (aCinema[r][s] == 'B') {
+                ticketSold++
+                income += aTicket[r][s]
+            }
+            fullHouse++
+            total += aTicket[r][s]
+        }
+    }
+    println("Number of purchased tickets: $ticketSold")
+    val nPercentage =  ticketSold.toDouble() / fullHouse.toDouble() * 100
+    val sPercentage = String.format("%.2f", nPercentage)
+    println("Percentage: $sPercentage%")
+    println("Current income: $$income")
+    println("Total income: $$total")
 
 }
 
 fun menu(aCinema: Array<CharArray>, aTicket: Array<IntArray>) {
     println("1. Show the seats")
     println("2. Buy a ticket")
+    println("3. Statistics")
     println("0. Exit")
     when (scanner.nextInt()) {
         0 -> return
@@ -79,6 +113,14 @@ fun menu(aCinema: Array<CharArray>, aTicket: Array<IntArray>) {
         }
         2 -> {
             buyTicket(aCinema, aTicket)
+            menu(aCinema, aTicket)
+        }
+        3 -> {
+            ticketPurchased(aCinema, aTicket)
+            menu(aCinema, aTicket)
+        }
+        else -> {
+            println("Wrong input!")
             menu(aCinema, aTicket)
         }
     }

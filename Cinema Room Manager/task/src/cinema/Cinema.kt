@@ -2,10 +2,10 @@ package cinema
 
 import java.util.*
 
+val scanner = Scanner(System.`in`)
 
 fun main() {
     // write your code here
-    val scanner = Scanner(System.`in`)
     println("Enter the number of rows:")
     val nTotalRows = scanner.nextInt()
     println("Enter the number of seats in each row:")
@@ -28,15 +28,7 @@ fun main() {
             }
         }
     }
-    drawCinema(aCinema)
-    println("Enter a row number:")
-    val nReservedRow = scanner.nextInt()
-    println("Enter a seat number in that row:")
-    val nReservedSeat = scanner.nextInt()
-    println("Ticket price: $${aTicket[nReservedRow - 1][nReservedSeat - 1]}")
-    aCinema[nReservedRow - 1][nReservedSeat - 1] = 'B'
-    drawCinema(aCinema)
-
+    menu(aCinema, aTicket)
 }
 
 fun drawCinema(a2D: Array<CharArray>) {
@@ -62,4 +54,32 @@ fun drawCinema(a2D: Array<CharArray>) {
         }
     }
 
+}
+
+fun buyTicket(aCinema: Array<CharArray>, aTicket: Array<IntArray>) {
+    println("Enter a row number:")
+    val nReservedRow = scanner.nextInt()
+    println("Enter a seat number in that row:")
+    val nReservedSeat = scanner.nextInt()
+    println("Ticket price: $${aTicket[nReservedRow - 1][nReservedSeat - 1]}")
+    aCinema[nReservedRow - 1][nReservedSeat - 1] = 'B'
+
+
+}
+
+fun menu(aCinema: Array<CharArray>, aTicket: Array<IntArray>) {
+    println("1. Show the seats")
+    println("2. Buy a ticket")
+    println("0. Exit")
+    when (scanner.nextInt()) {
+        0 -> return
+        1 -> {
+            drawCinema(aCinema)
+            menu(aCinema, aTicket)
+        }
+        2 -> {
+            buyTicket(aCinema, aTicket)
+            menu(aCinema, aTicket)
+        }
+    }
 }
